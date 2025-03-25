@@ -1,4 +1,19 @@
-package edu.tcu.cs.hogwartsartifactsonline.hogwarts.converter;
+package edu.tcu.cs.hogwartsartifactsonline.hogwartsuser.converter;
 
-public class UserToUserDtoConverter {
-}
+import edu.tcu.cs.hogwartsartifactsonline.hogwartsuser.HogwartsUser;
+import edu.tcu.cs.hogwartsartifactsonline.hogwartsuser.dto.UserDto;
+import org.springframework.core.convert.converter.Converter;
+
+public class UserToUserDtoConverter implements Converter<HogwartsUser, UserDto> {
+
+    @Override
+    public UserDto convert(HogwartsUser source) {
+
+        final UserDto userDto = new UserDto(source.getId(),
+                source.getUsername(),
+                source.isEnabled(),
+                source.getRoles());
+        return userDto;
+    }
+    }
+
