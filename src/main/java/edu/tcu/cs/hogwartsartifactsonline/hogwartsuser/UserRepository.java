@@ -1,4 +1,5 @@
-package edu.tcu.cs.hogwartsartifactsonline.hogwarts;
+package edu.tcu.cs.hogwartsartifactsonline.hogwartsuser;
 
-public interface UserRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+public interface UserRepository extends JpaRepository<HogwartsUser, Integer> {
 }
