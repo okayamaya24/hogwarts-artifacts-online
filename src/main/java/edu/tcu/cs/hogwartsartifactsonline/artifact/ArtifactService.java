@@ -41,7 +41,7 @@ public class ArtifactService {
                 .map(oldArtifact -> {
                     oldArtifact.setName(update.getName());
                     oldArtifact.setDescription(update.getDescription());
-                    oldArtifact.setImageUrl(update.getImageURL());
+                    oldArtifact.setImageUrl(update.getImageUrl());
                    return this.artifactRepository.save(oldArtifact);
                 })
                 .orElseThrow(()-> new ObjectNotFoundException("artifact", artifactId));

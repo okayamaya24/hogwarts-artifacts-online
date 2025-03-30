@@ -3,7 +3,7 @@ package edu.tcu.cs.hogwartsartifactsonline.system;
 import edu.tcu.cs.hogwartsartifactsonline.artifact.Artifact;
 import edu.tcu.cs.hogwartsartifactsonline.artifact.ArtifactRepository;
 import edu.tcu.cs.hogwartsartifactsonline.hogwartsuser.HogwartsUser;
-import edu.tcu.cs.hogwartsartifactsonline.hogwartsuser.UserRepository;
+import edu.tcu.cs.hogwartsartifactsonline.hogwartsuser.UserService;
 import edu.tcu.cs.hogwartsartifactsonline.wizard.Wizard;
 import edu.tcu.cs.hogwartsartifactsonline.wizard.WizardRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -13,16 +13,13 @@ import org.springframework.stereotype.Component;
 public class DBDataInitializer implements CommandLineRunner {
 
     private final ArtifactRepository artifactRepository;
-
     private final WizardRepository wizardRepository;
+    private final UserService userService;
 
-    private final UserRepository userRepository;
-
-
-    public DBDataInitializer(ArtifactRepository artifactRepository, WizardRepository wizardRepository, UserRepository userRepository) {
+    public DBDataInitializer(ArtifactRepository artifactRepository, WizardRepository wizardRepository, UserService userService) {
         this.artifactRepository = artifactRepository;
         this.wizardRepository = wizardRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -83,10 +80,9 @@ public class DBDataInitializer implements CommandLineRunner {
         wizardRepository.save(w1);
         wizardRepository.save(w2);
         wizardRepository.save(w3);
-
         artifactRepository.save(a6);
 
-        // Create some users.
+        // Create users (with encoded passwords)
         HogwartsUser u1 = new HogwartsUser();
         u1.setId(1);
         u1.setUsername("john");
@@ -108,9 +104,8 @@ public class DBDataInitializer implements CommandLineRunner {
         u3.setEnabled(false);
         u3.setRoles("user");
 
-        this.userRepository.save(u1);
-        this.userRepository.save(u2);
-        this.userRepository.save(u3);
+        this.userService.save(u1);
+        this.userService.save(u2);
+        this.userService.save(u3);
     }
-
 }

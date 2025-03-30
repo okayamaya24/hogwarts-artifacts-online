@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false) // Turn off Spring Security
 class ArtifactControllerTest {
 
     @Autowired
@@ -42,7 +42,7 @@ class ArtifactControllerTest {
 
     List<Artifact> artifacts;
 
-    @Value("${api.endpoint.base-url}")
+    @Value("${api.endpoint.base-url}") // Spring will go to application.yml to find the value and inject into this field.
     String baseUrl;
 
 
@@ -167,7 +167,7 @@ class ArtifactControllerTest {
                 .andExpect(jsonPath("$.data.id").isNotEmpty())
                 .andExpect(jsonPath("$.data.name").value(savedArtifact.getName()))
                 .andExpect(jsonPath("$.data.description").value(savedArtifact.getDescription()))
-                .andExpect(jsonPath("$.data.imageUrl").value(savedArtifact.getImageURL()));
+                .andExpect(jsonPath("$.data.imageUrl").value(savedArtifact.getImageUrl()));
     }
 
     @Test
@@ -196,7 +196,7 @@ class ArtifactControllerTest {
                 .andExpect(jsonPath("$.data.id").value("1250808601744904192"))
                 .andExpect(jsonPath("$.data.name").value(updatedArtifact.getName()))
                 .andExpect(jsonPath("$.data.description").value(updatedArtifact.getDescription()))
-                .andExpect(jsonPath("$.data.imageUrl").value(updatedArtifact.getImageURL()));
+                .andExpect(jsonPath("$.data.imageUrl").value(updatedArtifact.getImageUrl()));
     }
 
     @Test
