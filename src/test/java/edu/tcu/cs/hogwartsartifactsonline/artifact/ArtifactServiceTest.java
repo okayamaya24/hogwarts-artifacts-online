@@ -22,16 +22,17 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
+// For JUnit 5, we need to use @ExtendWith.
 @ExtendWith(MockitoExtension.class)
 class ArtifactServiceTest {
 
-    @Mock
+    @Mock // @Mock defines a Mockito mock object for ArtifactRepository.
     ArtifactRepository artifactRepository;
 
     @Mock
     IdWorker idWorker;
 
-    @InjectMocks
+    @InjectMocks // The Mockito mock objects for ArtifactRepository and IdWorker will be injected into artifactService.
     ArtifactService artifactService;
 
     List<Artifact> artifacts;
@@ -62,7 +63,7 @@ class ArtifactServiceTest {
 
     @Test
     void testFindByIdSuccess() {
-        // Given. Arrange inputs and targets. Define the behavior of Mock object artifactsRepository
+        // Given. Arrange inputs and targets. Define the behavior of Mock object artifactRepository.
         /*
         "id": "1250808601744904192",
         "name": "Invisibility Cloak",
@@ -73,7 +74,7 @@ class ArtifactServiceTest {
         a.setId("1250808601744904192");
         a.setName("Invisibility Cloak");
         a.setDescription("An invisibility cloak is used to make the wearer invisible.");
-        a.setImageURL("ImageURL");
+        a.setImageUrl("ImageUrl");
 
         Wizard w = new Wizard();
         w.setId(2);
@@ -81,34 +82,33 @@ class ArtifactServiceTest {
 
         a.setOwner(w);
 
-        given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(a)); // Defines the behavior of mock object.
+        given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(a)); // Define the behavior of the mock object.
 
-        //When. Act on the target behavior. When steps should cover the method to be tested
-        Artifact returnedArtifact = this.artifactService.findById( "1250808601744904192");
+        // When. Act on the target behavior. When steps should cover the method to be tested.
+        Artifact returnedArtifact = this.artifactService.findById("1250808601744904192");
 
-        //Then. Assert expected outcomes.
+        // Then. Assert expected outcomes.
         assertThat(returnedArtifact.getId()).isEqualTo(a.getId());
         assertThat(returnedArtifact.getName()).isEqualTo(a.getName());
         assertThat(returnedArtifact.getDescription()).isEqualTo(a.getDescription());
-        assertThat(returnedArtifact.getImageURL()).isEqualTo(a.getImageURL());
-        assertThat(returnedArtifact.getOwner()).isEqualTo(a.getOwner());
+        assertThat(returnedArtifact.getImageUrl()).isEqualTo(a.getImageUrl());
+        assertThat(returnedArtifact.getOwner()).isNotNull();
 
-
-        verify(artifactRepository, times(1)).findById("1250808601744904192");
-
+        // Verify artifactRepository.findById() is called exactly once with "1250808601744904192".
+        verify(this.artifactRepository, times(1)).findById("1250808601744904192");
     }
 
     @Test
     void testFindByIdNotFound() {
-        //Given.
-        given(artifactRepository.findById(Mockito.any(String.class))).willReturn(Optional.empty());
+        // Given
+        given(this.artifactRepository.findById(Mockito.any(String.class))).willReturn(Optional.empty());
 
-        //When.
-        Throwable thrown = catchThrowable(()-> {
-            Artifact returnedArtifact = artifactService.findById("1250808601744904192");
+        // When
+        Throwable thrown = catchThrowable(() -> {
+            Artifact returnedArtifact = this.artifactService.findById("1250808601744904192");
         });
 
-        //Then.
+        // Then
         assertThat(thrown)
                 .isInstanceOf(ObjectNotFoundException.class)
                 .hasMessage("Could not find artifact with Id 1250808601744904192 :(");
@@ -117,20 +117,20 @@ class ArtifactServiceTest {
 
     @Test
     void testFindAllSuccess() {
-        //Given
-            given(this.artifactRepository.findAll()).willReturn(artifacts);
+        // Given
+        given(this.artifactRepository.findAll()).willReturn(this.artifacts);
 
-        //When
-         List<Artifact> actualArtifacts = this.artifactService.findAll();
+        // When
+        List<Artifact> actualArtifacts = this.artifactService.findAll();
 
-        //Then
+        // Then
         assertThat(actualArtifacts.size()).isEqualTo(this.artifacts.size());
         verify(this.artifactRepository, times(1)).findAll();
     }
 
     @Test
     void testSaveSuccess() {
-        //Given
+        // Given
         Artifact newArtifact = new Artifact();
         newArtifact.setName("Artifact 3");
         newArtifact.setDescription("Description...");
@@ -139,20 +139,20 @@ class ArtifactServiceTest {
         given(this.idWorker.nextId()).willReturn(123456L);
         given(this.artifactRepository.save(newArtifact)).willReturn(newArtifact);
 
-        //When
+        // When
         Artifact savedArtifact = this.artifactService.save(newArtifact);
 
-        //Then
+        // Then
         assertThat(savedArtifact.getId()).isEqualTo("123456");
         assertThat(savedArtifact.getName()).isEqualTo(newArtifact.getName());
         assertThat(savedArtifact.getDescription()).isEqualTo(newArtifact.getDescription());
-        assertThat(savedArtifact.getImageURL()).isEqualTo(newArtifact.getImageURL());
-        verify(artifactRepository, times(1)).save(newArtifact);
+        assertThat(savedArtifact.getImageUrl()).isEqualTo(newArtifact.getImageUrl());
+        verify(this.artifactRepository, times(1)).save(newArtifact);
     }
 
     @Test
     void testUpdateSuccess() {
-        //Given
+        // Given
         Artifact oldArtifact = new Artifact();
         oldArtifact.setId("1250808601744904192");
         oldArtifact.setName("Invisibility Cloak");
@@ -160,7 +160,7 @@ class ArtifactServiceTest {
         oldArtifact.setImageUrl("ImageUrl");
 
         Artifact update = new Artifact();
-        update.setId("1250808601744904192");
+        // update.setId("1250808601744904192");
         update.setName("Invisibility Cloak");
         update.setDescription("A new description.");
         update.setImageUrl("ImageUrl");
@@ -168,14 +168,14 @@ class ArtifactServiceTest {
         given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.of(oldArtifact));
         given(this.artifactRepository.save(oldArtifact)).willReturn(oldArtifact);
 
-        //When
-       Artifact updatedArtifact = this.artifactService.update("1250808601744904192", update);
+        // When
+        Artifact updatedArtifact = this.artifactService.update("1250808601744904192", update);
 
-        //Then
+        // Then
         assertThat(updatedArtifact.getId()).isEqualTo("1250808601744904192");
         assertThat(updatedArtifact.getDescription()).isEqualTo(update.getDescription());
-        verify(artifactRepository, times(1)).findById("1250808601744904192");
-        verify(artifactRepository, times(1)).save(oldArtifact);
+        verify(this.artifactRepository, times(1)).findById("1250808601744904192");
+        verify(this.artifactRepository, times(1)).save(oldArtifact);
     }
 
     @Test
@@ -188,12 +188,12 @@ class ArtifactServiceTest {
 
         given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.empty());
 
-        //When
-       assertThrows(ObjectNotFoundException.class, () -> {
-           this.artifactService.update("1250808601744904192",update);
-       });
+        // When
+        assertThrows(ObjectNotFoundException.class, () -> {
+            this.artifactService.update("1250808601744904192", update);
+        });
 
-        //Then
+        // Then
         verify(this.artifactRepository, times(1)).findById("1250808601744904192");
     }
 
@@ -217,7 +217,7 @@ class ArtifactServiceTest {
     }
 
     @Test
-    void testDeleteNotFound(){
+    void testDeleteNotFound() {
         // Given
         given(this.artifactRepository.findById("1250808601744904192")).willReturn(Optional.empty());
 
@@ -229,4 +229,5 @@ class ArtifactServiceTest {
         // Then
         verify(this.artifactRepository, times(1)).findById("1250808601744904192");
     }
+
 }

@@ -17,7 +17,7 @@ public class Artifact implements Serializable {
 
     private String description;
 
-    private String imageURL;
+    private String imageUrl;
 
     @ManyToOne
     private Wizard owner;
@@ -50,12 +50,12 @@ public class Artifact implements Serializable {
         this.description = description;
     }
 
-    public String getImageURL() {
-        return imageURL;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Wizard getOwner() {
@@ -66,7 +66,4 @@ public class Artifact implements Serializable {
         this.owner = owner;
     }
 
-    public void setImageUrl(String imageUrl) {
-
-    }
 }
