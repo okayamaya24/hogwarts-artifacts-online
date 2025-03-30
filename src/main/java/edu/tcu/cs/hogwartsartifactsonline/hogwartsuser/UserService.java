@@ -15,8 +15,7 @@ import java.util.List;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -33,18 +32,14 @@ public class UserService implements UserDetailsService {
     }
 
     public HogwartsUser save(HogwartsUser newHogwartsUser) {
-
         newHogwartsUser.setPassword(passwordEncoder.encode(newHogwartsUser.getPassword()));
         return this.userRepository.save(newHogwartsUser);
     }
+
     /**
      * We are not using this update to change user password.
-     *
-     * @param userId
-     * @param update
-     * @return
      */
-    public HogwartsUser update( Integer userId, HogwartsUser update) {
+    public HogwartsUser update(Integer userId, HogwartsUser update) {
         HogwartsUser oldHogwartsUser = this.userRepository.findById(userId)
                 .orElseThrow(() -> new ObjectNotFoundException("user", userId));
         oldHogwartsUser.setUsername(update.getUsername());
@@ -61,8 +56,8 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-      return this.userRepository.findByUsername(username)
-                .map(hogwartsUser -> new MyUserPrincipal(hogwartsUser))
-                .orElseThrow(() -> new UsernameNotFoundException("username" + username +"is not found"));
+        return this.userRepository.findByUsername(username)
+                .map(MyUserPrincipal::new)
+                .orElseThrow(() -> new UsernameNotFoundException("username " + username + " is not found"));
     }
 }

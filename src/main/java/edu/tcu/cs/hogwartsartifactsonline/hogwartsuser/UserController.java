@@ -76,4 +76,3 @@ public class UserController {
         return new Result(true, StatusCode.SUCCESS, "Delete Success");
     }
 
-}

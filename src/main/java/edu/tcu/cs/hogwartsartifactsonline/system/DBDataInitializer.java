@@ -13,9 +13,7 @@ import org.springframework.stereotype.Component;
 public class DBDataInitializer implements CommandLineRunner {
 
     private final ArtifactRepository artifactRepository;
-
     private final WizardRepository wizardRepository;
-
     private final UserService userService;
 
     public DBDataInitializer(ArtifactRepository artifactRepository, WizardRepository wizardRepository, UserService userService) {
@@ -23,7 +21,6 @@ public class DBDataInitializer implements CommandLineRunner {
         this.wizardRepository = wizardRepository;
         this.userService = userService;
     }
-
 
     @Override
     public void run(String... args) throws Exception {
@@ -80,12 +77,12 @@ public class DBDataInitializer implements CommandLineRunner {
         w3.setName("Neville Longbottom");
         w3.addArtifact(a5);
 
-    wizardRepository.save(w1);
-    wizardRepository.save(w2);
-    wizardRepository.save(w3);
+        wizardRepository.save(w1);
+        wizardRepository.save(w2);
+        wizardRepository.save(w3);
+        artifactRepository.save(a6);
 
-    artifactRepository.save(a6);
-
+        // Create users (with encoded passwords)
         HogwartsUser u1 = new HogwartsUser();
         u1.setId(1);
         u1.setUsername("john");
@@ -111,7 +108,4 @@ public class DBDataInitializer implements CommandLineRunner {
         this.userService.save(u2);
         this.userService.save(u3);
     }
-
-
-
 }
