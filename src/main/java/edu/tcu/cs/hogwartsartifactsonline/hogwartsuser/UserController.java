@@ -75,4 +75,5 @@ public class UserController {
         this.userService.delete(userId);
         return new Result(true, StatusCode.SUCCESS, "Delete Success");
     }
+}
 
