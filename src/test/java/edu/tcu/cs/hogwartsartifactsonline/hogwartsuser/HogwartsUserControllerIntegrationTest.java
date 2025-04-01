@@ -38,7 +38,7 @@ class HogwartsUserControllerIntegrationTest {
 
     String token;
 
-    @Value("${api.endpoint.base-url}")
+    @Value("${api.endpoint.base-url:/api/v1}") // Fallback if property not set
     String baseUrl;
 
 
@@ -127,7 +127,7 @@ class HogwartsUserControllerIntegrationTest {
                 .andExpect(jsonPath("$.code").value(StatusCode.INVALID_ARGUMENT))
                 .andExpect(jsonPath("$.message").value("Provided arguments are invalid, see data for details."))
                 .andExpect(jsonPath("$.data.username").value("username is required."))
-                .andExpect(jsonPath("$.data.password").value("password is required"))
+                .andExpect(jsonPath("$.data.password").value("password is required."))
                 .andExpect(jsonPath("$.data.roles").value("roles are required."));
         this.mockMvc.perform(get(this.baseUrl + "/users").accept(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION, this.token))
                 .andExpect(jsonPath("$.flag").value(true))
